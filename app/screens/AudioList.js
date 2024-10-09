@@ -1,18 +1,4 @@
 import React, { Component } from "react";
-<<<<<<< HEAD
-import { Text, View, StyleSheet, ScrollView } from "react-native";
-import { AudioContext } from "../context/AudioProvider";
-
-export class AudioList extends Component {
-  static contextType = AudioContext;
-  render() {
-    return (
-      <ScrollView>
-        {this.context.audioFiles.map((item) => (
-          <Text key={item.id}>{item.filename}</Text>
-        ))}
-      </ScrollView>
-=======
 import { Text, View, StyleSheet, Dimensions } from "react-native";
 import { AudioContext } from "../context/AudioProvider";
 import { RecyclerListView, LayoutProvider } from "recyclerlistview";
@@ -205,7 +191,6 @@ export class AudioList extends Component {
           );
         }}
       </AudioContext.Consumer>
->>>>>>> 8856f1c (Muita coisa pra um Titulo só)
     );
   }
 }
