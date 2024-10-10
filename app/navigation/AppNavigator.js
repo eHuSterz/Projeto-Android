@@ -12,6 +12,7 @@ import PlayListDetail from "../screens/PlayListDetail";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+// Stack navigator para telas da PlayList
 const PlayListScreen = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -21,40 +22,49 @@ const PlayListScreen = () => {
   );
 };
 
+// Navegação principal do aplicativo
 const AppNavigation = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          // Definindo ícones para cada aba
+          if (route.name === "AudioList") {
+            iconName = "headset";
+            return <Ionicons name={iconName} size={size} color={color} />;
+          } else if (route.name === "Player") {
+            iconName = "compact-disc";
+            return <FontAwesome5 name={iconName} size={size} color={color} />;
+          } else if (route.name === "PlayListScreen") {
+            iconName = "library-music";
+            return <MaterialIcons name={iconName} size={size} color={color} />;
+          }
+        },
+        //Definindo cores para a barra onde ficam os ícones de tela
+        tabBarActiveTintColor: "green",
+        tabBarInactiveTintColor: "white",
+        tabBarStyle: {
+          backgroundColor: "black",
+        },
+      })}
+    >
+      //Retirando a barra do topo
       <Tab.Screen
         name="AudioList"
         component={AudioList}
-        options={{
-          headerShown: false,
-          tabBarIcon: (color, size) => {
-            return <Ionicons name="headset" size={24} color="black" />;
-          },
-        }}
+        options={{ headerShown: false }}
       />
       <Tab.Screen
         name="Player"
         component={Player}
-        options={{
-          headerShown: false,
-          tabBarIcon: (color, size) => {
-            return <FontAwesome5 name="compact-disc" size={24} color="black" />;
-          },
-        }}
+        options={{ headerShown: false }}
       />
       <Tab.Screen
         name="PlayListScreen"
         component={PlayListScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: (color, size) => {
-            return (
-              <MaterialIcons name="library-music" size={24} color="black" />
-            );
-          },
-        }}
+        options={{ headerShown: false }}
       />
     </Tab.Navigator>
   );
