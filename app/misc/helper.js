@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Função para armazenar o áudio para a próxima abertura do aplicativo
 export const storeAudioForNextOpening = async (audio, index, lastPosition) => {
   await AsyncStorage.setItem(
     "previousAudio",
@@ -6,13 +8,15 @@ export const storeAudioForNextOpening = async (audio, index, lastPosition) => {
   );
 };
 
+// Função para converter o tempo de minutos para o formato mm:ss
 export const convertTime = (minutes) => {
   if (minutes) {
-    const hrs = minutes / 60;
-    const minute = hrs.toString().split(".")[0];
-    const percent = parseInt(hrs.toString().split(".")[1].slice(0, 2));
-    const sec = Math.ceil((60 * percent) / 100);
+    const hrs = minutes / 60; // Converte minutos para horas
+    const minute = hrs.toString().split(".")[0]; // Obtém a parte inteira das horas
+    const percent = parseInt(hrs.toString().split(".")[1].slice(0, 2)); // Obtém os primeiros dois dígitos da parte decimal
+    const sec = Math.ceil((60 * percent) / 100); // Converte a parte decimal para segundos
 
+    // Formata o tempo para mm:ss
     if (parseInt(minute) < 10 && sec < 10) {
       return `0${minute}:0${sec}`;
     }
