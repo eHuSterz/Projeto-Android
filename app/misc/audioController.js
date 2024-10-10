@@ -1,6 +1,6 @@
 import { storeAudioForNextOpening } from "./helper";
 
-//Tocar musica
+// Função para tocar música
 export const play = async (playbackObj, uri, lastPosition) => {
   try {
     //Se não tiver última posição
@@ -21,7 +21,8 @@ export const play = async (playbackObj, uri, lastPosition) => {
     console.log("erro dento do metodo de ajuda play", error.message);
   }
 };
-//Pausar musica
+
+// Função para pausar música
 export const pause = async (playbackObj) => {
   try {
     return await playbackObj.setStatusAsync({ shouldPlay: false });
@@ -29,7 +30,8 @@ export const pause = async (playbackObj) => {
     console.log("erro dentro do metodo de ajuda pause", error.message);
   }
 };
-//Resume musica
+
+// Função para retomar música
 export const resume = async (playbackObj) => {
   try {
     return await playbackObj.playAsync();
@@ -37,7 +39,8 @@ export const resume = async (playbackObj) => {
     console.log("erro dentro do metodo de ajuda resume", error.message);
   }
 };
-//Selecionar outra musica
+
+// Função para selecionar outra música
 export const playNext = async (playbackObj, uri) => {
   try {
     await playbackObj.stopAsync();
@@ -47,6 +50,8 @@ export const playNext = async (playbackObj, uri) => {
     console.log("erro dentro do metodo de ajuda playNext", error.message);
   }
 };
+
+// Função para selecionar áudio
 export const selectAudio = async (audio, context, playListInfo = {}) => {
   const {
     soundObj,
@@ -74,6 +79,7 @@ export const selectAudio = async (audio, context, playListInfo = {}) => {
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
       return storeAudioForNextOpening(audio, index);
     }
+
     //Pausar o audio
     if (
       soundObj.isLoaded &&
@@ -87,6 +93,7 @@ export const selectAudio = async (audio, context, playListInfo = {}) => {
         playbackPosition: status.positionMillis,
       });
     }
+
     //Retomar o audio
     if (
       soundObj.isLoaded &&
@@ -96,6 +103,7 @@ export const selectAudio = async (audio, context, playListInfo = {}) => {
       const status = await resume(playbackObj);
       return updateState(context, { soundObj: status, isPlaying: true });
     }
+
     // Tocar outro áudio
     if (soundObj.isLoaded && currentAudio.id !== audio.id) {
       const status = await playNext(playbackObj, audio.uri);
@@ -116,6 +124,7 @@ export const selectAudio = async (audio, context, playListInfo = {}) => {
   }
 };
 
+// Função para selecionar áudio da playlist
 const selectAudioFromPlayList = async (context, select) => {
   const { activePlayList, currentAudio, audioFiles, playbackObj, updateState } =
     context;
@@ -153,6 +162,7 @@ const selectAudioFromPlayList = async (context, select) => {
   });
 };
 
+// Função para mudar o áudio
 export const changeAudio = async (context, select) => {
   const {
     playbackObj,
@@ -237,6 +247,7 @@ export const changeAudio = async (context, select) => {
   }
 };
 
+// Função para mover o áudio
 export const moveAudio = async (context, value) => {
   const { soundObj, isPlaying, playbackObj, updateState } = context;
   if (soundObj === null || !isPlaying) return;
