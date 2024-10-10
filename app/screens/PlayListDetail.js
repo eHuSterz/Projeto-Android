@@ -19,10 +19,12 @@ const PlayListDetail = (props) => {
   const context = useContext(AudioContext);
   const playList = props.route.params;
 
+  // Controle de visibilidade do modal, item selecionado e lista de áudios
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [audios, setAudios] = useState(playList.audios);
 
+  // Função para reproduzir um áudio
   const playAudio = async (audio) => {
     await selectAudio(audio, context, {
       activePlayList: playList,
@@ -30,11 +32,13 @@ const PlayListDetail = (props) => {
     });
   };
 
+  // Função para fechar o modal
   const closeModal = () => {
     setSelectedItem({});
     setModalVisible(false);
   };
 
+  // Função para remover um áudio da playlist
   const removeAudio = async () => {
     let isPlaying = context.isPlaying;
     let isPlayListRunning = context.isPlayListRunning;
@@ -42,11 +46,11 @@ const PlayListDetail = (props) => {
     let playbackPosition = context.playbackPosition;
     let activePlayList = context.activePlayList;
 
+    //Parar o áudio, se o mesmo for removido da PlayList
     if (
       context.isPlayListRunning &&
       context.currentAudio.id === selectedItem.id
     ) {
-      //Parar o áudio, se o mesmo for removido da PlayList
       await context.playbackObj.stopAsync();
       await context.playbackObj.unloadAsync();
 
@@ -57,10 +61,10 @@ const PlayListDetail = (props) => {
       activePlayList = [];
     }
 
-    //
-
+    // Filtrar a lista de áudios para remover o áudio selecionado
     const newAudios = audios.filter((audio) => audio.id !== selectedItem.id);
 
+    // Atualizar a playlist
     const result = await AsyncStorage.getItem("playlist");
 
     if (result !== null) {
@@ -88,6 +92,7 @@ const PlayListDetail = (props) => {
     closeModal();
   };
 
+  // Função para remover a playlist inteira
   const removePlaylist = async () => {
     let isPlaying = context.isPlaying;
     let isPlayListRunning = context.isPlayListRunning;
@@ -95,8 +100,8 @@ const PlayListDetail = (props) => {
     let playbackPosition = context.playbackPosition;
     let activePlayList = context.activePlayList;
 
+    // Parar o áudio se a playlist estiver sendo reproduzida e for removida
     if (context.isPlayListRunning && activePlayList.id === playList.id) {
-      //Parar o áudio, se o mesmo for removido da PlayList
       await context.playbackObj.stopAsync();
       await context.playbackObj.unloadAsync();
 
@@ -107,8 +112,7 @@ const PlayListDetail = (props) => {
       activePlayList = [];
     }
 
-    //
-
+    // Atualizar a lista de playlists no AsyncStorage
     const result = await AsyncStorage.getItem("playlist");
 
     if (result !== null) {
@@ -128,6 +132,7 @@ const PlayListDetail = (props) => {
       });
     }
 
+    // Navegar de volta para a tela anterior
     props.navigation.goBack();
   };
 
@@ -192,6 +197,7 @@ const PlayListDetail = (props) => {
   );
 };
 
+// Estilos para o componente
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
