@@ -7,7 +7,9 @@ import { Audio } from "expo-av";
 import { storeAudioForNextOpening } from "../misc/helper";
 import { playNext } from "../misc/audioController";
 
+// Criação do contexto de áudio
 export const AudioContext = createContext();
+
 export class AudioProvider extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +32,7 @@ export class AudioProvider extends Component {
     this.totalAudioCount = 0;
   }
 
+  // Alerta de permissão para acessar os arquivos do dispositivo
   permissionAlert = () => {
     Alert.alert(
       "Permissão Requerida",
@@ -41,6 +44,7 @@ export class AudioProvider extends Component {
     );
   };
 
+  // Função para obter arquivos de áudio
   getAudioFiles = async () => {
     const { dataProvider, audioFiles } = this.state;
     let media = await MediaLibrary.getAssetsAsync({
@@ -62,6 +66,7 @@ export class AudioProvider extends Component {
     });
   };
 
+  // Função para carregar o áudio anterior
   loadPreviousAudio = async () => {
     let previousAudio = await AsyncStorage.getItem("previousAudio");
     let currentAudio;
@@ -78,15 +83,11 @@ export class AudioProvider extends Component {
     this.setState({ ...this.state, currentAudio, currentAudioIndex });
   };
 
+  // Função para obter permissão
   getPermission = async () => {
-    // {"accessPrivileges": "none",
-    //  "canAskAgain": true,
-    // "expires": "never",
-    // "granted": false,
-    // "status": "undetermined"}
     const permission = await MediaLibrary.getPermissionsAsync();
     if (permission.granted) {
-      //  será transmitido para o app todos os arquivos de audio
+      // Transmitir para o app todos os arquivos de áudio
       this.getAudioFiles();
     }
 
@@ -98,12 +99,12 @@ export class AudioProvider extends Component {
       const { status, canAskAgain } =
         await MediaLibrary.requestPermissionsAsync();
       if (status === "denied" && canAskAgain) {
-        //  será transmitido um display dizendo que o usuário precisa conceder permissão para que app funcione como planejado
+        // Exibir alerta dizendo que o usuário precisa conceder permissão para que o app funcione como planejado
         this.permissionAlert();
       }
 
       if (status === "granted") {
-        //  será transmitido para o app todos os arquivos de audio
+        // Transmitir para o app todos os arquivos de áudio
         this.getAudioFiles();
       }
 
@@ -114,6 +115,7 @@ export class AudioProvider extends Component {
     }
   };
 
+  // Função para atualizar o status da reprodução
   onPlaybackStatusUpdate = async (playbackStatus) => {
     if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
       this.updateState(this, {
@@ -155,6 +157,7 @@ export class AudioProvider extends Component {
       }
 
       const nextAudioIndex = this.state.currentAudioIndex + 1;
+
       //Caso não haja próximo áudio para tocar ou o áudio atual é o último
       if (nextAudioIndex >= this.totalAudioCount) {
         this.state.playbackObj.unloadAsync();
@@ -168,6 +171,7 @@ export class AudioProvider extends Component {
         });
         return await storeAudioForNextOpening(this.state.audioFiles[0], 0);
       }
+
       //Caso contrário será selecionado o próximo áudio
       const audio = this.state.audioFiles[nextAudioIndex];
       const status = await playNext(this.state.playbackObj, audio.uri);
@@ -188,6 +192,7 @@ export class AudioProvider extends Component {
     }
   }
 
+  // Função para atualizar
   updateState = (prevState, newState = {}) => {
     this.setState({ ...prevState, ...newState });
   };
