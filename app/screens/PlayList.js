@@ -14,14 +14,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AudioContext } from "../context/AudioProvider";
 import PlayListDetail from "../components/PlayListDetail";
 
+// Variável para armazenar a playlist selecionada
 let selectedPlayList = {};
 const PlayList = ({ navigation }) => {
+  // Controle de visibilidade do modal e da lista de reprodução
   const [modalVisible, setModalVisible] = useState(false);
   const [showPlayList, setShowPlayList] = useState(false);
 
   const context = useContext(AudioContext);
   const { playList, addToPlayList, updateState } = context;
 
+  // Função para criar uma nova playlist
   const createPlayList = async (playListName) => {
     const result = await AsyncStorage.getItem("playlist");
     if (result !== null) {
@@ -42,6 +45,7 @@ const PlayList = ({ navigation }) => {
     setModalVisible(false);
   };
 
+  // Função para renderizar a lista de reprodução
   const renderPlayList = async () => {
     const result = await AsyncStorage.getItem("playlist");
     if (result === null) {
@@ -65,12 +69,14 @@ const PlayList = ({ navigation }) => {
     });
   };
 
+  // useEffect para carregar a lista de reprodução ao montar o componente
   useEffect(() => {
     if (!playList.length) {
       renderPlayList();
     }
   }, []);
 
+  // Função para lidar com o clique no banner da playlist
   const handleBannerPress = async (playList) => {
     if (addToPlayList) {
       const result = await AsyncStorage.getItem("playlist");
@@ -109,9 +115,9 @@ const PlayList = ({ navigation }) => {
       updateState(context, { addToPlayList: null, playList: [...updatedList] });
       return AsyncStorage.setItem("playlist", JSON.stringify([...updatedList]));
     }
+
     // Se não for selecionado nenhum áudio, a lista pode ser aberta
     selectedPlayList = playList;
-    // setShowPlayList(true);
     navigation.navigate("PlayListDetail", playList);
   };
 
@@ -125,7 +131,7 @@ const PlayList = ({ navigation }) => {
                 style={styles.playListBanner}
                 onPress={() => handleBannerPress(item)}
               >
-                <Text>{item.title}</Text>
+                <Text style={styles.tituloModal}>{item.title}</Text>
                 <Text style={styles.audioCount}>
                   {item.audios.length > 1
                     ? `${item.audios.length} Músicas`
@@ -157,6 +163,7 @@ const PlayList = ({ navigation }) => {
   );
 };
 
+// Estilos para o componente
 const styles = StyleSheet.create({
   container: {
     padding: 20,
@@ -171,6 +178,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     opacity: 0.5,
     fontSize: 14,
+    color: color.FONT_MEDIUM,
   },
   playListBtn: {
     color: color.ACTIVE_BG,
@@ -178,6 +186,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 14,
     padding: 5,
+  },
+  tituloModal: {
+    color: color.FONT_MEDIUM,
+    fontWeight: "bold",
   },
 });
 
