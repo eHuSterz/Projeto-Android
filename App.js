@@ -4,6 +4,7 @@ import AppNavigation from "./app/navigation/AppNavigator";
 import AudioProvider from "./app/context/AudioProvider";
 import color from "./app/misc/color";
 
+// Tema customizado para o App
 const MyTheme = {
   ...DefaultTheme,
   colors: {
@@ -12,6 +13,7 @@ const MyTheme = {
   },
 };
 
+// Componente principal do App
 export default function App() {
   return (
     <AudioProvider>
