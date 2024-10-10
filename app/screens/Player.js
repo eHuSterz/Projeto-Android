@@ -24,14 +24,19 @@ import {
 } from "../misc/audioController";
 import { convertTime, storeAudioForNextOpening } from "../misc/helper";
 
+// Obtendo a largura da janela do dispositivo
 const { width } = Dimensions.get("window");
 
 const Player = () => {
+  // Estado para armazenar a posição atual do áudio
   const [currentPosition, setCurrentPosition] = useState(0);
   const context = useContext(AudioContext);
   const { playbackPosition, playbackDuration, currentAudio } = context;
+
+  // Valor de rotação para animação
   const rotateValue = useRef(new Animated.Value(0)).current;
 
+  // Função para calcular a posição da barra de progresso
   const calculateSeebBar = () => {
     if (playbackPosition !== null && playbackDuration !== null) {
       return playbackPosition / playbackDuration;
@@ -43,10 +48,12 @@ const Player = () => {
     return 0;
   };
 
+  // Carregar o áudio anterior
   useEffect(() => {
     context.loadPreviousAudio();
   }, []);
 
+  // Iniciar ou parar a animação de rotação com base no estado de reprodução
   useEffect(() => {
     if (context.isPlaying) {
       startImageRotateFunction();
@@ -55,6 +62,7 @@ const Player = () => {
     }
   }, [context.isPlaying]);
 
+  // Função para iniciar a animação de rotação
   const startImageRotateFunction = () => {
     rotateValue.setValue(0);
     Animated.loop(
@@ -67,18 +75,22 @@ const Player = () => {
     ).start();
   };
 
+  // Função para lidar com o botão de play/pause
   const handlePlayPause = async () => {
     await selectAudio(context.currentAudio, context);
   };
 
+  // Função para avançar para a próxima música
   const handleNext = async () => {
     await changeAudio(context, "next");
   };
 
+  // Função para voltar para a música anterior
   const handlePrevious = async () => {
     await changeAudio(context, "previous");
   };
 
+  // Função para renderizar o tempo atual do áudio
   const renderCurrentTime = () => {
     if (!context.soundObj && currentAudio.lastPosition) {
       return convertTime(currentAudio.lastPosition / 1000);
@@ -94,8 +106,12 @@ const Player = () => {
           <View style={{ flexDirection: "row" }}>
             {context.isPlayListRunning && (
               <>
-                <Text style={{ fontWeight: "bold" }}>Música da PlayList: </Text>
-                <Text>{context.activePlayList.title}</Text>
+                <Text style={{ fontWeight: "bold", color: color.FONT_MEDIUM }}>
+                  Música da PlayList:{" "}
+                </Text>
+                <Text style={{ color: color.FONT_MEDIUM }}>
+                  {context.activePlayList.title}
+                </Text>
               </>
             )}
           </View>
@@ -138,8 +154,10 @@ const Player = () => {
               color: color.FONT_MEDIUM,
             }}
           >
-            <Text>{convertTime(context.currentAudio.duration)}</Text>
-            <Text>
+            <Text style={{ color: color.FONT_MEDIUM }}>
+              {convertTime(context.currentAudio.duration)}
+            </Text>
+            <Text style={{ color: color.FONT_MEDIUM }}>
               {currentPosition ? currentPosition : renderCurrentTime()}
             </Text>
           </View>
@@ -186,6 +204,7 @@ const Player = () => {
   );
 };
 
+// Estilos para o componente
 const styles = StyleSheet.create({
   audioControllers: {
     width,
