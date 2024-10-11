@@ -50,7 +50,6 @@ const AppNavigation = () => {
         },
       })}
     >
-      //Retirando a barra do topo
       <Tab.Screen
         name="AudioList"
         component={AudioList}
