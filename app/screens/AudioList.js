@@ -109,7 +109,8 @@ export class AudioList extends Component {
     return (
       <AudioContext.Consumer>
         {({ isPlaying, audioFiles }) => {
-          if (!audioFiles.length) return null;
+          if (!audioFiles || !audioFiles.length) {
+          }
           return (
             <Screen>
               <View style={styles.searchContainer}>
@@ -151,6 +152,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "lightgray", // Adicione uma cor de fundo temporária
   },
   searchContainer: {
     flexDirection: "row",
